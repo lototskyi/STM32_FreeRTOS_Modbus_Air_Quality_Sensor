@@ -1,0 +1,8 @@
+#Build Directories
+[Dd]ebug/
+[Rr]elease/
+
+.metadata/
+.settings/
+*.ld
+*.launch
