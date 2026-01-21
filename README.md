@@ -47,5 +47,3 @@ The project focuses on **clean architecture, real-time behavior, and reliable co
 
 ---
 
-## 🏗️ Software Architecture
-
