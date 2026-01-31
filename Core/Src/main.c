@@ -3,6 +3,7 @@
  */
 
 #include "gpio.h"
+#include "irq.h"
 #include "rcc.h"
 #include "error_handler_task.h"
 #include "sys_health_monitor_task.h"
@@ -37,6 +38,9 @@ int main(void)
 
     // Initialize the required GPIOs
     gpio_init();
+
+    // Set IRQ priorities
+    irq_set_priorities();
 
     // Create the startup task
     startup();
