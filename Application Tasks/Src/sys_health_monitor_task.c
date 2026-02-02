@@ -11,7 +11,7 @@
 #include "gpio.h"
 #include "adc.h"
 #include "tim.h"
-// Todo: include iwdg.h
+#include "iwdg.h"
 
 // Global health flags
 volatile bool g_sensors_task_ok = false;
@@ -46,8 +46,6 @@ static uint16_t temperature_to_adc(float temp_celsius)
 
     return adc_value;
 }
-
-// Todo: define get_temperature() function
 
 /**
  * Computes the temperature based on sensor voltage.
@@ -88,11 +86,11 @@ static void sys_health_monitor_task(void *param)
     adc_awd_init(ADC1, ADC_CH18, awd_htr, awd_ltr);
 
     // Initialize the IWDG here if not in Debug Mode
-    if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0)
-    {
+//    if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0)
+//    {
         // Debugger not connected, safe to enable IWDG
-        // Todo: call iwdg_init()
-    }
+        iwdg_init();
+//    }
 
     // Variable used to check the system health
     bool system_healthy;
@@ -119,7 +117,7 @@ static void sys_health_monitor_task(void *param)
 
         if (system_healthy)
         {
-            // Todo: call iwdg_reset()
+            iwdg_reset();
 
             g_sensors_task_ok = false;
             // ... reset any other task flags as well
