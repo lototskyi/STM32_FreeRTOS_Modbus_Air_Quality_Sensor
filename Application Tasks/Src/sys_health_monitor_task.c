@@ -86,11 +86,11 @@ static void sys_health_monitor_task(void *param)
     adc_awd_init(ADC1, ADC_CH18, awd_htr, awd_ltr);
 
     // Initialize the IWDG here if not in Debug Mode
-//    if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0)
-//    {
+    if ((CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) == 0)
+    {
         // Debugger not connected, safe to enable IWDG
         iwdg_init();
-//    }
+    }
 
     // Variable used to check the system health
     bool system_healthy;

@@ -11,5 +11,8 @@ void irq_set_priorities(void)
 {
     // Internal temperature sensor
     NVIC_SetPriority(ADC_IRQn, IRQ_ADC_PRIORITY);
+
+    // Button EXTI
+    NVIC_SetPriority(EXTI15_10_IRQn, IRQ_EXTI15_10_PRIORITY);
 }
 

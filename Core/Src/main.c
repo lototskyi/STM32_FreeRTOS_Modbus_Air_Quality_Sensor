@@ -2,6 +2,7 @@
  * Application entry point
  */
 
+#include "button.h"
 #include "gpio.h"
 #include "irq.h"
 #include "rcc.h"
@@ -59,6 +60,12 @@ int main(void)
  */
 static void startup_task(void *param)
 {
+    // Initialize the USER button
+    button_init();
+
+    // Check if the IWDG caused a reset
+    button_check_and_acknowledge_iwdg_event();
+
     // Start the Error Handler Task
     error_handler_task_start();
 
