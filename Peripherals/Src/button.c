@@ -13,7 +13,7 @@
 #include "semphr.h"
 
 // Semaphore for synchronizing button press events with its external interrupt (EXTI)
-static SemaphoreHandle_t exti5_10_semaphore_handle = NULL;
+static SemaphoreHandle_t exti15_10_semaphore_handle = NULL;
 
 /**
  * Waits for user button press to acknowledge a fault event and blocks the calling task until the button is pressed.
@@ -22,7 +22,7 @@ static SemaphoreHandle_t exti5_10_semaphore_handle = NULL;
  */
 static void button_wait_for_acknowledge(uint32_t blink_interval_ms)
 {
-    while ((xSemaphoreTake(exti5_10_semaphore_handle, 0) != pdTRUE))
+    while ((xSemaphoreTake(exti15_10_semaphore_handle, 0) != pdTRUE))
     {
         gpio_toggle_pin(USER_LED_PORT, USER_LED_PIN);
         vTaskDelay(pdMS_TO_TICKS(blink_interval_ms));
@@ -35,8 +35,8 @@ static void button_wait_for_acknowledge(uint32_t blink_interval_ms)
 void button_init(void)
 {
     // Create a semaphore for EXTI
-    exti5_10_semaphore_handle = xSemaphoreCreateBinary();
-    configASSERT(exti5_10_semaphore_handle != NULL);
+    exti15_10_semaphore_handle = xSemaphoreCreateBinary();
+    configASSERT(exti15_10_semaphore_handle != NULL);
 
     // Configure button interrupts for user interaction
     exti_set_source(EXTI_PORT_C, USER_BUTTON_PIN);
@@ -66,7 +66,7 @@ void EXTI15_10_IRQHandler(void)
         EXTI->PR |= EXTI_PR_PR13;
 
         // Give the EXTI15_10 Semaphore to `button_wait_for_acknowledge`
-        xSemaphoreGiveFromISR(exti5_10_semaphore_handle, &higher_priority_task_woken);
+        xSemaphoreGiveFromISR(exti15_10_semaphore_handle, &higher_priority_task_woken);
     }
 
     portYIELD_FROM_ISR(higher_priority_task_woken);

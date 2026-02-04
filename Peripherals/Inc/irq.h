@@ -14,7 +14,7 @@
 #define IRQ_ADC_PRIORITY            ((uint32_t) (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 0))
 
 // External interrupt priority for the user button
-#define IRQ_EXTI15_10_PRIORITY            ((uint32_t) (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 0))
+#define IRQ_EXTI15_10_PRIORITY      ((uint32_t) (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 0))
 
 /**
  * Configures the priority levels for various IRQs in the system by setting the
