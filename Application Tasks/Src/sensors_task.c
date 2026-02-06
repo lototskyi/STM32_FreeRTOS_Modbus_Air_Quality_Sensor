@@ -11,7 +11,8 @@
 // @Todo: #include "modbus_data_mgr.h"
 #include "queue.h"
 #include "sys_health_monitor_task.h"
-// @Todo: #include "sgp40_voc_index.h"
+#include "sgp40_voc_index.h"
+//#include "sensirion_i2c.h"
 
 /**
  * Queue handle for the Sensors Task
@@ -53,7 +54,26 @@ static void sensors_task(void *params)
 
     sensors_task_data_t sensors_task_data = {0};
 
-    // Todo: Initialize the sensors and let the Error Handler know if there was an issue
+    // Initialize the sensors and let the Error Handler know if there was an issue
+    error_t sensors_task_status = sensirion_init_sensors();
+
+    if (sensors_task_status != ERR_OK)
+    {
+        error_handler_send_msg(EVT_SENSOR_READ_FAIL);
+    }
+
+    // Todo: Remove this test code
+//    gpio_write_pin(TEST_PORT, TEST_PIN, GPIO_PIN_SET);
+//    sensirion_sleep_usec(1000);     // SHT3X_CMD_DURATION_USEC from sht3x.c
+//    gpio_write_pin(TEST_PORT, TEST_PIN, GPIO_PIN_RESET);
+//
+//    gpio_write_pin(TEST_PORT, TEST_PIN, GPIO_PIN_SET);
+//    sensirion_sleep_usec(100000);     // SGP40_CMD_MEASURE_RAW_DURATION_US from sgp40.h
+//    gpio_write_pin(TEST_PORT, TEST_PIN, GPIO_PIN_RESET);
+//
+//    gpio_write_pin(TEST_PORT, TEST_PIN, GPIO_PIN_SET);
+//    sensirion_sleep_usec(500);     // SGP40_CMD_GET_SERIAL_ID_US from sgp40.c
+//    gpio_write_pin(TEST_PORT, TEST_PIN, GPIO_PIN_RESET);
 
     // Todo: Get the sampling interval from the Modbus Holding registers and update the xFrequency variable
     // For now, just set it to 1000
@@ -94,10 +114,31 @@ static void sensors_task(void *params)
 
         }
 
-        // Todo:    1) Read VOC index, temperature and humidity
-        //          2) If sensor read successful;
-        //              Check if VOC sensor is warmed up (value not 0), toggle LED, update sensor task data structure, update Modbus Data Manager w/sensor data.
-        //          2) Else; let the Error Handler know by sending EVT_SENSOR_READ_FAIL.
+        // 1) Read VOC index, temperature and humidity
+        // 2) If sensor read successful;
+        //    Check if VOC sensor is warmed up (value not 0), toggle LED, update sensor task data structure, update Modbus Data Manager w/sensor data.
+        // 3) Else; let the Error Handler know by sending EVT_SENSOR_READ_FAIL.
+
+        // Read VOC index, temperature and humidity
+        sensors_task_status = sensirion_measure_voc_index_with_rh_t(&voc_index_sens, &hum_sens, &amb_temp_sens);
+
+        if (sensors_task_status == ERR_OK)
+        {
+            if (voc_index_sens != 0)
+            {
+                gpio_toggle_pin(USER_LED_PORT, USER_LED_PIN);
+
+                sensors_task_data.voc_index = voc_index_sens;
+                sensors_task_data.amb_temp = amb_temp_sens / 1000;
+                sensors_task_data.hum = hum_sens / 1000;
+
+                // Todo: Update the Modbus input registers with the sensor data
+            }
+        }
+        else
+        {
+            error_handler_send_msg(EVT_SENSOR_READ_FAIL);
+        }
     }
 }
 
@@ -114,7 +155,7 @@ error_t sensors_task_send_msg(sensors_msg_e msg_id, uint16_t sampling_interval)
         status = ERR_FAIL;
     }
 
-    retur status;
+    return status;
 }
 
 void sensors_task_start(void)

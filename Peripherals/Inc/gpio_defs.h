@@ -16,4 +16,14 @@
 #define USER_BUTTON_PORT    GPIOC
 #define USER_BUTTON_PIN     GPIO_PIN_13
 
+// Test interface
+#define TEST_PORT           GPIOC
+#define TEST_PIN            GPIO_PIN_7
+
+// Sensirion sensors
+#define SENSIRION_SCL_PORT  GPIOB
+#define SENSIRION_SCL_PIN   GPIO_PIN_8
+#define SENSIRION_SDA_PORT  GPIOB
+#define SENSIRION_SDA_PIN   GPIO_PIN_9
+
 #endif /* INC_GPIO_DEFS_H_ */
