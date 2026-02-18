@@ -8,13 +8,13 @@
 #include "error_handler_task.h"
 // Todo: include the below once integrated/implemented
 //#include "modbus_data_mgr_task.h"
-//#include "modbus_slave.h"
+#include "modbus_slave.h"
 //#include "modbus_sync.h"
 //#include "system_events.h"
 //#include "uart.h"
 
-// Todo: Initialize Modbus Slave buffers
-//modbus_buffers_t modbus_buffers = {0};
+// Initialize Modbus Slave buffers
+modbus_buffers_t modbus_buffers = {0};
 
 // Queue handle for the feedback queue, shared with the Modbus Data Manager Task
 QueueHandle_t modbus_feedback_queue_handle = NULL;
