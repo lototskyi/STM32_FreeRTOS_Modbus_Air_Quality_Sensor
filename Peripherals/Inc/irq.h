@@ -20,6 +20,9 @@
 #define IRQ_I2C_EV_PRIORITY         ((uint32_t) (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 1))
 #define IRQ_TIM5_PRIORITY           ((uint32_t) (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 2))
 
+// USART2 interrupt priority for Modbus operations.
+#define IRQ_USART2_PRIORITY         ((uint32_t) (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + 4))
+
 /**
  * Configures the priority levels for various IRQs in the system by setting the
  * priority levels in the NVIC (Nested Vectored Interrupt Controller) for specific interrupts.

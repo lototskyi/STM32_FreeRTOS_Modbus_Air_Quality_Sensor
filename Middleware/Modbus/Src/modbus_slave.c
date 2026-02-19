@@ -18,9 +18,9 @@
  * Initialization of Modbus register buffers.
  */
 uint8_t modbus_coils[(COIL_MAX + 7) / 8]            = {0};
-uint8_t modbus_discrete_inputs[(DISC_MAX + 7) / 8]  = {0};
-uint16_t modbus_input_regs[INPUT_MAX]               = {0};
-uint16_t modbus_holding_regs[HOLDING_MAX]           = {0};
+uint8_t modbus_discrete_inputs[(DISC_MAX + 7) / 8]  = {0b00000101};
+uint16_t modbus_input_regs[INPUT_MAX]               = {0x0000, 0x0001, 0x0002, 0x0003, 0x0004, 0x0005, 0x0006};
+uint16_t modbus_holding_regs[HOLDING_MAX]           = {0x0007, 0x0008, 0x0009, 0x000A, 0x000B};
 
 /**
  * Prepares a Modbus response message by appending the CRC to the

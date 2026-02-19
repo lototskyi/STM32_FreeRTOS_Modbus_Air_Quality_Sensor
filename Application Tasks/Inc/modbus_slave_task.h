@@ -17,13 +17,13 @@
 typedef enum
 {
     READ_COILS              = 0x01,
-    READ_DESCRETE_INPUTS    = 0x02,
+    READ_DISCRETE_INPUTS    = 0x02,
     READ_HOLDING_REGS       = 0x03,
     READ_INPUT_REGS         = 0x04,
-    WTITE_SINGLE_REG        = 0x06,
-    WTITE_HOLDING_REGS      = 0x10,
-    WTITE_SINGLE_COIL       = 0x05,
-    WTITE_MULTI_COILS       = 0x0F
+    WRITE_SINGLE_REG        = 0x06,
+    WRITE_HOLDING_REGS      = 0x10,
+    WRITE_SINGLE_COIL       = 0x05,
+    WRITE_MULTI_COILS       = 0x0F
 } modbus_function_codes_e;
 
 /**
