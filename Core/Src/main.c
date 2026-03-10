@@ -2,11 +2,14 @@
  * Application entry point
  */
 
+#include <string.h>
 #include "button.h"
+#include "dma.h"
 #include "gpio.h"
 #include "irq.h"
 #include "rcc.h"
 #include "error_handler_task.h"
+#include "fram.h"
 #include "modbus_slave_task.h"
 #include "sensors_task.h"
 #include "sys_health_monitor_task.h"
@@ -15,6 +18,9 @@
 
 // Startup Task prototype
 static void startup(void);
+
+// FRAM test prototype
+static void fram_test(void);
 
 int main(void)
 {
@@ -45,6 +51,9 @@ int main(void)
     // Set IRQ priorities
     irq_set_priorities();
 
+    // Initialize DMA
+    dma_init();
+
     // Create the startup task
     startup();
 
@@ -68,6 +77,12 @@ static void startup_task(void *param)
     // Check if the IWDG caused a reset
     button_check_and_acknowledge_iwdg_event();
 
+    // Initialize FRAM
+    fram_init();
+
+    // Run FRAM test
+    fram_test();
+
     // Start the Error Handler Task
     error_handler_task_start();
 
@@ -90,4 +105,46 @@ static void startup_task(void *param)
 static void startup(void)
 {
     configASSERT(pdPASS == xTaskCreate(startup_task, "Startup Task", STARTUP_TASK_STACK_SIZE, NULL, STARTUP_TASK_PRIORITY, NULL));
+}
+
+/**
+ * Basic FRAM validation test.
+ *
+ * This test writes a predefined pattern to the FRAM, reads it back,
+ * and verifies correctness using a simple memory comparison.
+ *
+ * In a production-ready system, this test could be expanded to include
+ * writing to larger portions of memory or testing across the end address.
+ * Additionally, an alert or error-handling mechanism (such as logging if available
+ * or triggering a system fault response) could be integrated into a startup test sequence.
+ */
+static void fram_test(void)
+{
+    uint8_t write_data[] = {0xAB, 0xCD, 0xEF, 0x12};
+    uint8_t read_data[sizeof(write_data)] = {0};
+    uint16_t test_address = FRAM_ADDR_START + 500;
+
+    error_t status;
+
+    // Write test data
+    status = fram_write(test_address, write_data, sizeof(write_data));
+
+    if (status != ERR_OK)
+    {
+        while (1);
+    }
+
+    // Read back data
+    status = fram_read(test_address, read_data, sizeof(read_data));
+
+    if (status != ERR_OK)
+    {
+        while (1);
+    }
+
+    // Validate data
+    if (memcmp(write_data, read_data, sizeof(write_data)) != 0)
+    {
+        while (1);
+    }
 }
