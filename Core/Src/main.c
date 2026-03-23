@@ -13,8 +13,12 @@
 #include "modbus_slave_task.h"
 #include "sensors_task.h"
 #include "sys_health_monitor_task.h"
+#include "system_events.h"
 #include "FreeRTOSConfig.h"
 #include "FreeRTOSTasks.h"
+
+// System Events Group Handle
+EventGroupHandle_t system_event_group;
 
 // Startup Task prototype
 static void startup(void);
@@ -71,6 +75,10 @@ int main(void)
  */
 static void startup_task(void *param)
 {
+    // Create the Event Group
+    system_event_group = xEventGroupCreate();
+    configASSERT(system_event_group != NULL);
+
     // Initialize the USER button
     button_init();
 
@@ -81,7 +89,7 @@ static void startup_task(void *param)
     fram_init();
 
     // Run FRAM test
-    fram_test();
+    //fram_test();
 
     // Start the Error Handler Task
     error_handler_task_start();
