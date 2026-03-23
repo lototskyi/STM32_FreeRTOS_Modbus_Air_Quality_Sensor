@@ -75,8 +75,15 @@
 #define configUSE_COUNTING_SEMAPHORES     1
 #define configRECORD_STACK_HIGH_ADDRESS   1
 
-/* Runtime stats configuration */
-//#define configGENERATE_RUN_TIME_STATS     1
+/* Run Time stats configuration */
+#define configRECORD_STACK_HIGH_ADDRESS            1
+#define configUSE_TRACE_FACILITY                   1
+#define configUSE_STATS_FORMATTING_FUNCTIONS       1
+#define configGENERATE_RUN_TIME_STATS              1
+extern void configureRunTime(void);
+#define portCONFIGURE_TIMER_FOR_RUN_TIME_STATS()   configureRunTime()
+extern uint32_t getRunTimeCounter(void);
+#define portGET_RUN_TIME_COUNTER_VALUE()           getRunTimeCounter()
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES           0

@@ -475,6 +475,9 @@ void modbus_data_mgr_start(void)
 
     configASSERT(modbus_data_mgr_queue_handle != NULL);
 
+    // Add the Modbus Data Manager Queue object to the FreeRTOS Queue registery
+    vQueueAddToRegistry(modbus_data_mgr_queue_handle, "Modbus Data Mgr Queue");
+
     configASSERT(xTaskCreate(modbus_data_mgr_task,
                              "Modbus Data Manager Task",
                              MODBUS_DATA_MGR_TASK_STACK_SIZE,
